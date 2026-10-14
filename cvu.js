@@ -1,7 +1,7 @@
 // CVU Tools launcher — loaded by the "CVU Tools" bookmark.
 // To add a tool: put the file in /tools and add a line to TOOLS below.
 (() => {
-  const VERSION = '2026-10-14b';
+  const VERSION = '2026-10-14c';
   const TOOLS = [
     { site: 'nidms', file: 'cvu-comments.js',     name: 'Comment writer',               hint: 'Open application (needs the Internal Comments box)' },
     { site: 'nidms', file: 'nidms-lookup.js',     name: 'Passport / R No. lookup',      hint: 'Search D-Visa Applications page' },
