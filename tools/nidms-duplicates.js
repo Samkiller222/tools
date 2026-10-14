@@ -26,14 +26,23 @@
   q$('dp-close').onclick = () => box.remove();
 
   const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
-  const search = async q => {
-    let body;
-    if (typeof gridFilterForm_filters === 'function' && document.getElementById('QuickCriteria')) {
-      $('#QuickCriteria').val(q);
-      body = $.param({ sort: '', page: 1, pageSize: 100, group: '', filter: '', ...gridFilterForm_filters() });
-    } else {
-      body = $.param({ sort: '', page: 1, pageSize: 100, group: '', filter: '', QuickCriteria: q, AdvancedFilters: '[]', __RequestVerificationToken: token });
+  // ---------- search (same request the Search page sends; works from any NIDMS page) ----------
+  let tmplP = null;
+  const getTemplate = () => tmplP || (tmplP = (async () => {
+    let form = document.getElementById('search-visa-applications-form');
+    if (!form) {
+      const html = await (await fetch('/portal/DVisaApplication', { credentials: 'same-origin' })).text();
+      form = new DOMParser().parseFromString(html, 'text/html').getElementById('search-visa-applications-form');
     }
+    if (!form) { tmplP = null; throw new Error('could not load the NIDMS search form (logged out?)'); }
+    const t = {};
+    form.querySelectorAll('input[name],select[name],textarea[name]').forEach(el => {
+      t[el.name] = (el.name === 'AdvancedFilters' || el.name === '__RequestVerificationToken') ? el.value : '';
+    });
+    return t;
+  })());
+  const searchOnce = async q => {
+    const body = new URLSearchParams({ sort: '', page: 1, pageSize: 100, group: '', filter: '', ...(await getTemplate()), QuickCriteria: q });
     const res = await fetch('/portal/DVisaApplication/DVisaApplications_Read', {
       method: 'POST', credentials: 'same-origin',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
@@ -42,7 +51,15 @@
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const text = await res.text();
     try { return JSON.parse(text).Data || []; }
-    catch { if (/no match/i.test(text)) return []; throw new Error(text.slice(0, 120)); }
+    catch {
+      if (/no match/i.test(text)) return [];
+      throw new Error(/MODELERRORKEY_EXCEPTION/.test(text) ? 'NIDMS server error' : text.slice(0, 120));
+    }
+  };
+  const search = async q => {
+    if (!q) return [];
+    try { return await searchOnce(q); }
+    catch (e) { await new Promise(r => setTimeout(r, 1500)); return searchOnce(q); }   // one retry
   };
 
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
