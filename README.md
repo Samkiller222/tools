@@ -15,6 +15,7 @@ The bookmark loads `cvu.js` from this site each time it's clicked. `cvu.js` show
 | `tools/cvu-comments.js` | NIDMS | Comment writer — fills Internal Comments (6 types) |
 | `tools/nidms-lookup.js` | NIDMS | Batch lookup by passport and/or R number |
 | `tools/nidms-refusals.js` | NIDMS | Refusal grounds, sent-to-L1 and refused date/by, internal comments |
+| `tools/nidms-afd.js` | NIDMS | All AFD-tagged applications + who added the tag and when |
 | `tools/nidms-duplicates.js` | NIDMS | Duplicate passports in a list + status of each application |
 | `tools/nvis-my-stickers.js` | N-VIS | Export every page of My Stickers |
 | `tools/nvis-visa-lookup.js` | N-VIS | Batch lookup by visa number (test) |

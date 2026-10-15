@@ -1,11 +1,12 @@
 // CVU Tools launcher — loaded by the "CVU Tools" bookmark.
 // To add a tool: put the file in /tools and add a line to TOOLS below.
 (() => {
-  const VERSION = '2026-10-14e';
+  const VERSION = '2026-10-15a';
   const TOOLS = [
     { site: 'nidms', file: 'cvu-comments.js',     name: 'Comment writer',               hint: 'Open application (needs the Internal Comments box)' },
     { site: 'nidms', file: 'nidms-lookup.js',     name: 'Passport / R No. lookup',      hint: 'Search D-Visa Applications page' },
     { site: 'nidms', file: 'nidms-refusals.js',   name: 'Refusal reasons + L1 + refused date', hint: 'Search D-Visa Applications page' },
+    { site: 'nidms', file: 'nidms-afd.js',        name: 'AFD list (Awaiting Further Documentation)', hint: 'Any NIDMS page' },
     { site: 'nidms', file: 'nidms-duplicates.js', name: 'Passport duplicate check',      hint: 'Search D-Visa Applications page' },
     { site: 'nvis',  file: 'nvis-my-stickers.js', name: 'My Stickers export',            hint: 'Stickers → My Stickers' },
     { site: 'nvis',  file: 'nvis-visa-lookup.js', name: 'Visa number lookup (test)',     hint: 'N-VIS Search page' },
